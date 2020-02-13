@@ -1,52 +1,74 @@
 public class Conta {
-    private int agencia;
-    private int identificacao;
-    private double saldo;
+    protected double saldo;
     private Cliente cliente;
+    private ContaPoupanca contaPoupanca;
+    private ContaCorrente contaCorrente;
 
-    public Conta(int agencia, int identificacao, double saldo,Cliente cliente){
-        this.agencia = agencia;
-        this.identificacao=identificacao;
-        this.saldo=saldo;
+    public Conta(Cliente cliente){
         this.cliente=cliente;
     }
-
-    public void deposito(double valor) {
+    public Conta(){}
+    public void depositoDinheiro(double valor) {
         if (valor > 0) {
             this.saldo += valor;
             System.out.println(saldo);
         } else {
             System.out.println("valor inválido para deposito");
         }
+
+    }
+    public void depositoCheque(double valor, String banco, String dataDePagamento) {
+        if (valor > 0) {
+            this.saldo += valor;
+            System.out.println("Deposito realizado com sucesso!"+saldo);
+        } else {
+            System.out.println("valor inválido para deposito");
+        }
+
     }
     public void saque(double valor){
-        if(saldo>=valor){
-        this.saldo-=valor;
+        if(this.saldo>=valor){
+            this.saldo-=valor;
             System.out.println( "transação realizada, seu novo saldo é = "+saldo);
-    }
+        }
         else{
-            System.out.println( "saldo insuficiente");
+            System.out.println( "saldo insuficiente, use crédito especial");
+        }
+    }
+    public void saqueCreditoEspecial(double valor){
+        double creditoEspecial =1000.00;
+        if(this.saldo+creditoEspecial>=valor){
+            this.saldo-=valor;
+            System.out.println( "transação realizada, seu novo saldo é = "+saldo);
+        }
+        else{
+            System.out.println( "Valor ultrapassa o uso do crédito especial");
         }
     }
 
-    public int getAgencia() {
-        return agencia;
-    }
-
-    public void setAgencia(int agencia) {
-        this.agencia = agencia;
-    }
-
-    public int getIdentificacao() {
-        return identificacao;
-    }
-
-    public void setIdentificacao(int identificacao) {
-        this.identificacao = identificacao;
-    }
 
     public double getSaldo() {
-        return saldo;
+        if (contaCorrente != null && contaPoupanca != null) {
+            double saldoTotal = contaPoupanca.getSaldo() + contaCorrente.getSaldo();
+            System.out.println("Seu saldo total é" + saldoTotal);
+            System.out.println("Seu saldo na conta Poupança é " + contaPoupanca.getSaldo());
+            System.out.println("Seu saldo na conta corrente é " + contaCorrente.getSaldo());
+            return this.saldo=saldoTotal;
+        } else {
+            if (contaCorrente != null) {
+                System.out.println("Seu saldo total é " + contaCorrente.getSaldo());
+                System.out.println("Seu saldo na conta Poupança é " + contaCorrente.getSaldo());
+                return this.saldo=contaCorrente.getSaldo();
+            }
+            else if (contaPoupanca != null)  {
+                System.out.println("Seu saldo total é" + contaPoupanca.getSaldo());
+                System.out.println("Seu saldo na conta Corrente é "+contaPoupanca.getSaldo());
+                return this.saldo=contaPoupanca.getSaldo();
+            }
+            else {
+                return 0;
+            }
+        }
     }
 
     public void setSaldo(double saldo) {
@@ -59,5 +81,21 @@ public class Conta {
 
     public void setCliente(Cliente cliente) {
         this.cliente = cliente;
+    }
+
+    public ContaPoupanca getContaPoupanca() {
+        return contaPoupanca;
+    }
+
+    public void setContaPoupanca(ContaPoupanca contaPoupanca) {
+        this.contaPoupanca = contaPoupanca;
+    }
+
+    public ContaCorrente getContaCorrente() {
+        return contaCorrente;
+    }
+
+    public void setContaCorrente(ContaCorrente contaCorrente) {
+        this.contaCorrente = contaCorrente;
     }
 }
